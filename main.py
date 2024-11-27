@@ -2,6 +2,8 @@ import pygame
 import random
 import sys
 import os
+import platform
+import asyncio
 
 # 设置标准输出编码为UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
@@ -332,6 +334,8 @@ def show_game_over(score):
 # 音效管理类
 class SoundManager:
     def __init__(self):
+        self.sounds = {}
+        # 移除平台检查，让网页版也能播放音效
         self.sounds = {
             'eat': self.load_sound('eat.wav', 0.5),
             'crash': self.load_sound('crash.wav', 0.6),
@@ -339,27 +343,19 @@ class SoundManager:
             'background': self.load_sound('background.wav', 0.3)
         }
         
-        # 开始播放背景音乐
-        if self.sounds['background']:
-            self.sounds['background'].play(-1)  # -1表示循环播放
+        # 播放背景音乐
+        if self.sounds.get('background'):
+            self.sounds['background'].play(-1)
     
     def load_sound(self, filename, volume=1.0):
         try:
-            sound = pygame.mixer.Sound(os.path.join('sounds', filename))
+            # 修改音效文件路径以适应网页环境
+            sound = pygame.mixer.Sound(f'sounds/{filename}')
             sound.set_volume(volume)
             return sound
-        except:
-            print(f"无法加载音效: {filename}")
+        except Exception as e:
+            print(f"无法加载音效: {filename}, 错误: {e}")
             return None
-    
-    def play(self, sound_name):
-        if sound_name in self.sounds and self.sounds[sound_name]:
-            self.sounds[sound_name].play()
-    
-    def stop_background(self):
-        if self.sounds['background']:
-            self.sounds['background'].stop()
-
 class SlowMotionManager:
     def __init__(self):
         self.is_active = False
@@ -407,11 +403,12 @@ class SlowMotionManager:
     def is_finished(self):
         return self.current_frame > self.duration
 
-def main():
+# 修改主函数为异步函数
+async def main():
     sound_manager = SoundManager()
     
     while True:
-        speed = show_menu(sound_manager)
+        speed = await show_menu(sound_manager)
         clock = pygame.time.Clock()
         snake = Snake()
         food = Food()
@@ -425,6 +422,7 @@ def main():
         show_continue_button = False
 
         while True:
+            # 添加事件处理的异步支持
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -457,6 +455,9 @@ def main():
                             snake.direction = 'LEFT'
                         elif event.key == pygame.K_RIGHT and snake.direction != 'LEFT':
                             snake.direction = 'RIGHT'
+
+            # 添加异步等待
+            await asyncio.sleep(0)
 
             if not paused and not game_over and not slow_motion.is_active:
                 # 绘制当前帧
@@ -519,7 +520,7 @@ def main():
 
             # 控制游戏速度
             if slow_motion.is_active:
-                clock.tick(speed // 2)  # 慢动作时速度减半
+                clock.tick(speed // 2)
             else:
                 clock.tick(speed)
 
@@ -527,5 +528,80 @@ def main():
     pygame.quit()
     sys.exit()
 
-if __name__ == '__main__':
-    main()
+# 修改菜单函数为异步函数
+async def show_menu(sound_manager):
+    difficulties = {
+        '简单': 8,
+        '中等': 12,
+        '困难': 16
+    }
+    
+    buttons = [
+        Button(WINDOW_WIDTH//2 - 100, 300 + i*70, 200, 50, 
+               text, GREEN, LIGHT_GREEN, sound_manager)
+        for i, text in enumerate(difficulties.keys())
+    ]
+    
+    while True:
+        screen.fill(BLACK)
+        
+        # 绘制标题
+        title = large_font.render('贪吃蛇', True, GOLD)
+        title_shadow = large_font.render('贪吃蛇', True, RED)
+        screen.blit(title_shadow, (WINDOW_WIDTH//2 - title.get_width()//2 + 2, 102))
+        screen.blit(title, (WINDOW_WIDTH//2 - title.get_width()//2, 100))
+        
+        # 绘制按钮
+        for button in buttons:
+            button.draw(screen)
+        
+        pygame.display.flip()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            for i, button in enumerate(buttons):
+                if button.handle_event(event):
+                    return difficulties[list(difficulties.keys())[i]]
+        
+        await asyncio.sleep(0)
+
+# 修改游戏结束函数为异步函数
+async def show_game_over(score):
+    restart_button = Button(WINDOW_WIDTH//2 - 200, 400, 180, 50, "重新开始", GREEN, LIGHT_GREEN)
+    quit_button = Button(WINDOW_WIDTH//2 + 20, 400, 180, 50, "退出游戏", RED, DARK_RED)
+    
+    while True:
+        screen.fill(BLACK)
+        
+        game_over_text = large_font.render('游戏结束', True, RED)
+        score_text = font.render(f'最终得分: {score}', True, GOLD)
+        
+        screen.blit(game_over_text, (WINDOW_WIDTH//2 - game_over_text.get_width()//2, 200))
+        screen.blit(score_text, (WINDOW_WIDTH//2 - score_text.get_width()//2, 300))
+        
+        restart_button.draw(screen)
+        quit_button.draw(screen)
+        
+        pygame.display.flip()
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if restart_button.handle_event(event):
+                return True
+            if quit_button.handle_event(event):
+                pygame.quit()
+                sys.exit()
+        
+        await asyncio.sleep(0)
+
+# 添加启动代码
+if platform.system() == "Emscripten":
+    asyncio.run(main())
+else:
+    if __name__ == '__main__':
+        asyncio.run(main())
