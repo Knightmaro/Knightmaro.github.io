@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://knightmaro.github.io/sitemap.xml

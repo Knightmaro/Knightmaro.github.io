@@ -20,7 +20,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -76,47 +76,6 @@
                 desktopHint.style.display = 'none';
                 mobileHint.style.display = 'block';
             }
-
-            // 语言切换功能
-            const languageBtn = document.querySelector('.language-btn');
-            const languageDropdown = document.querySelector('.language-dropdown');
-            const languageOptions = document.querySelectorAll('.language-option');
-
-            // 点击按钮显示/隐藏下拉菜单
-            languageBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                languageDropdown.classList.toggle('show');
-            });
-
-            // 语言页面映射
-            const languageUrls = {
-                'zh': '/zh/index.html',  // 中文版页面路径
-                'en': '/en/index.html',  // 英文版页面路径
-                'ja': '/ja/index.html'   // 日文版页面路径
-            };
-
-            // 点击每个语言选项
-            languageOptions.forEach(option => {
-                option.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const selectedLang = this.getAttribute('data-lang');
-                    
-                    // 获取对应语言版本的URL
-                    const targetUrl = languageUrls[selectedLang];
-                    
-                    // 导航到新页面
-                    if (targetUrl) {
-                        window.location.href = targetUrl;
-                    }
-                });
-            });
-
-            // 点击页面其他地方关闭下拉菜单
-            document.addEventListener('click', function(e) {
-                if (!languageBtn.contains(e.target)) {
-                    languageDropdown.classList.remove('show');
-                }
-            });
         });
     </script>
     <script type="application/ld+json">
@@ -145,20 +104,8 @@
 <body>
     <header class="header">
         <div class="container">
-            <div class="header-content">
-                <div class="title-section">
-                    <h1>Wordle中文版 - 每日词汇挑战</h1>
-                    <p>每天一个新词，六次机会猜对，挑战你的词汇量！</p>
-                </div>
-                <div class="language-switcher">
-                    <button class="language-btn">🌐 中文 <span class="arrow">▼</span></button>
-                    <div class="language-dropdown">
-                        <a href="/zh/index.html" class="language-option" data-lang="zh">中文</a>
-                        <a href="/en/index.html" class="language-option" data-lang="en">English</a>
-                        <a href="/ja/index.html" class="language-option" data-lang="ja">日本語</a>
-                    </div>
-                </div>
-            </div>
+            <h1>Wordle中文版 - 每日词汇挑战</h1>
+            <p>每天一个新词，六次机会猜对，挑战你的词汇量！</p>
         </div>
     </header>
 
