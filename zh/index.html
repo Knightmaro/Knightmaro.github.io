@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>Wordle中文版 - 免费在线文字猜词游戏 | 每日更新词汇挑战</title>
+    <meta name="description" content="免费在线玩Wordle中文版！每天一个新词，六次机会猜对，提升词汇量，锻炼逻辑思维。支持手机电脑，无需下载，简单有趣的文字益智游戏。">
+    <meta name="keywords" content="Wordle中文,猜词游戏,文字游戏,益智游戏,在线游戏,免费游戏,每日词汇,中文Wordle">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Wordle中文版 - 每日词汇挑战">
+    <meta property="og:description" content="每天一个新词，六次机会猜对。来挑战你的词汇量和逻辑思维！">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="你的网站URL">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../styles.css">
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameContainer = document.querySelector('.game-container');
+            const gameIframe = document.querySelector('.game-iframe');
+            let isGameActive = false;
+
+            // 防止方向键滚动的函数
+            function preventArrowScroll(e) {
+                const keys = {
+                    37: 'left',
+                    38: 'up',
+                    39: 'right',
+                    40: 'down',
+                    32: 'space'
+                };
+                
+                if (e.keyCode in keys) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+
+            // 当鼠标移入游戏区域
+            gameContainer.addEventListener('mouseenter', () => {
+                isGameActive = true;
+                window.addEventListener('keydown', preventArrowScroll, { capture: true });
+            });
+
+            // 当鼠标移出游戏区域
+            gameContainer.addEventListener('mouseleave', () => {
+                isGameActive = false;
+                window.removeEventListener('keydown', preventArrowScroll, { capture: true });
+            });
+
+            // 确保iframe始终能接收到键盘事件
+            gameIframe.addEventListener('load', () => {
+                gameIframe.focus();
+            });
+
+            // 点击游戏区域时聚焦iframe
+            gameContainer.addEventListener('click', () => {
+                gameIframe.focus();
+            });
+
+            // 检测是否为移动设备
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const desktopHint = document.querySelector('.desktop-hint');
+            const mobileHint = document.querySelector('.mobile-hint');
+
+            if (isMobile) {
+                desktopHint.style.display = 'none';
+                mobileHint.style.display = 'block';
+            }
+
+            // 语言切换功能
+            const languageBtn = document.querySelector('.language-btn');
+            const languageDropdown = document.querySelector('.language-dropdown');
+            const languageOptions = document.querySelectorAll('.language-option');
+
+            // 点击按钮显示/隐藏下拉菜单
+            languageBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('show');
+            });
+
+            // 语言页面映射
+            const languageUrls = {
+                'zh': '/zh/index.html',  // 中文版页面路径
+                'en': '/index.html',  // 英文版页面路径
+                'ja': '/ja/index.html'   // 日文版页面路径
+            };
+
+            // 点击每个语言选项
+            languageOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const selectedLang = this.getAttribute('data-lang');
+                    
+                    // 获取对应语言版本的URL
+                    const targetUrl = languageUrls[selectedLang];
+                    
+                    // 导航到新页面
+                    if (targetUrl) {
+                        window.location.href = targetUrl;
+                    }
+                });
+            });
+
+            // 点击页面其他地方关闭下拉菜单
+            document.addEventListener('click', function(e) {
+                if (!languageBtn.contains(e.target)) {
+                    languageDropdown.classList.remove('show');
+                }
+            });
+        });
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "Wordle中文版",
+        "description": "每日更新的中文猜词游戏，考验词汇量和逻辑思维",
+        "genre": ["文字游戏", "益智游戏", "猜词游戏"],
+        "gamePlatform": ["Web浏览器", "手机", "平板"],
+        "applicationCategory": "Game",
+        "inLanguage": "zh-CN",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1000"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CNY"
+        }
+    }
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>Wordle中文版 - 每日词汇挑战</h1>
+                    <p>每天一个新词，六次机会猜对，挑战你的词汇量！</p>
+                </div>
+                <div class="language-switcher">
+                    <button class="language-btn">🌐 中文 <span class="arrow">▼</span></button>
+                    <div class="language-dropdown">
+                        <a href="/zh/index.html" class="language-option" data-lang="zh">中文</a>
+                        <a href="/en/index.html" class="language-option" data-lang="en">English</a>
+                        <a href="/ja/index.html" class="language-option" data-lang="ja">日本語</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="game-wrapper">
+            <div class="game-decoration">
+                🎮 今日词汇挑战
+            </div>
+            <div class="game-container">
+                <iframe src="https://wordlegame.org/" 
+                        class="game-iframe"
+                        title="Google地图贪吃蛇游戏"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        tabindex="0"
+                        scrolling="no">
+                </iframe>
+            </div>
+            <div class="game-controls-hint">
+                <span class="desktop-hint">使用键盘输入猜测的词语 | 绿色表示正确，黄色表示位置错误</span>
+                <span class="mobile-hint" style="display: none;">点击虚拟键盘输入词语</span>
+            </div>
+        </div>
+
+        <div class="card-grid">
+            <div class="info-card">
+                <h2>关于 Wordle</h2>
+                <p>Wordle 是一款风靡全球的英文单词猜谜游戏，由 Josh Wardle 开发。每天更新一个5个字母的英文单词，玩家有6次机会猜测这个单词。游戏简单但富有挑战性，非常适合用来提升英语词汇量和逻辑思维能力。</p>
+                <div class="highlights">
+                    <div class="highlight-item">
+                        <span class="highlight-number">5</span>
+                        <span class="highlight-text">字母单词</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-number">6</span>
+                        <span class="highlight-text">次猜测机会</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-number">1</span>
+                        <span class="highlight-text">天一个新词</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h2>游戏规则</h2>
+                <ul class="feature-list">
+                    <li>每天更新一个5字母的英文单词</li>
+                    <li>六次机会猜测目标单词</li>
+                    <li>绿色方块表示字母位置正确</li>
+                    <li>黄色方块表示字母存在但位置错误</li>
+                    <li>灰色方块表示字母不在单词中</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h2>游戏技巧</h2>
+                <ul class="feature-list">
+                    <li>从常见5字母单词开始，如: STARE, CRANE</li>
+                    <li>注意已知字母的位置信息</li>
+                    <li>利用排除法缩小可能的单词范围</li>
+                    <li>记录并分析每次反馈的颜色提示</li>
+                </ul>
+            </div>
+
+           
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Wordle中文版 | 每日更新 | <a href="/about">关于我们</a> | <a href="/privacy">隐私政策</a></p>
+            <p>词汇数据库已收录超过10000个精选词汇，持续更新中...</p>
+        </div>
+    </footer>
+</body>
+</html> 

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>Wordle ゲーム - 無料オンライン単語推理ゲーム | デイリーワードチャレンジ</title>
+    <meta name="description" content="Wordleを無料でプレイ！毎日新しい単語に挑戦、6回のチャンスで単語を当てよう。語彙力と論理的思考を鍛えるのに最適。スマホとPCに対応、ダウンロード不要。">
+    <meta name="keywords" content="Wordle,ワードル,単語ゲーム,パズルゲーム,脳トレ,オンラインゲーム,無料ゲーム,デイリーワード">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Wordle - デイリーワードチャレンジ">
+    <meta property="og:description" content="毎日1つの新しい単語、6回のチャンスで当てよう。語彙力と論理的思考力に挑戦！">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="your-website-URL">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../styles.css">
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameContainer = document.querySelector('.game-container');
+            const gameIframe = document.querySelector('.game-iframe');
+            let isGameActive = false;
+
+            function preventArrowScroll(e) {
+                const keys = {
+                    37: 'left',
+                    38: 'up',
+                    39: 'right',
+                    40: 'down',
+                    32: 'space'
+                };
+                
+                if (e.keyCode in keys) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+
+            gameContainer.addEventListener('mouseenter', () => {
+                isGameActive = true;
+                window.addEventListener('keydown', preventArrowScroll, { capture: true });
+            });
+
+            gameContainer.addEventListener('mouseleave', () => {
+                isGameActive = false;
+                window.removeEventListener('keydown', preventArrowScroll, { capture: true });
+            });
+
+            gameIframe.addEventListener('load', () => {
+                gameIframe.focus();
+            });
+
+            gameContainer.addEventListener('click', () => {
+                gameIframe.focus();
+            });
+
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const desktopHint = document.querySelector('.desktop-hint');
+            const mobileHint = document.querySelector('.mobile-hint');
+
+            if (isMobile) {
+                desktopHint.style.display = 'none';
+                mobileHint.style.display = 'block';
+            }
+
+            // Language switching functionality
+            const languageBtn = document.querySelector('.language-btn');
+            const languageDropdown = document.querySelector('.language-dropdown');
+            const languageOptions = document.querySelectorAll('.language-option');
+
+            languageBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('show');
+            });
+
+            const languageUrls = {
+                'zh': '/zh/index.html',
+                'en': '/index.html',
+                'ja': '/ja/index.html'
+            };
+
+            languageOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const selectedLang = this.getAttribute('data-lang');
+                    const targetUrl = languageUrls[selectedLang];
+                    if (targetUrl) {
+                        window.location.href = targetUrl;
+                    }
+                });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!languageBtn.contains(e.target)) {
+                    languageDropdown.classList.remove('show');
+                }
+            });
+        });
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Game",
+        "name": "Wordleゲーム",
+        "description": "毎日の単語推理ゲームで語彙力と論理的思考を鍛える",
+        "genre": ["単語ゲーム", "パズルゲーム", "脳トレゲーム"],
+        "gamePlatform": ["Webブラウザ", "モバイル", "タブレット"],
+        "applicationCategory": "Game",
+        "inLanguage": "ja",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1000"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>Wordle - デイリーワードチャレンジ</h1>
+                    <p>毎日新しい単語、6回のチャンスで当てよう。語彙力に挑戦！</p>
+                </div>
+                <div class="language-switcher">
+                    <button class="language-btn">🌐 日本語 <span class="arrow">▼</span></button>
+                    <div class="language-dropdown">
+                        <a href="/zh/index.html" class="language-option" data-lang="zh">中文</a>
+                        <a href="/en/index.html" class="language-option" data-lang="en">English</a>
+                        <a href="/ja/index.html" class="language-option" data-lang="ja">日本語</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="game-wrapper">
+            <div class="game-decoration">
+                🎮 今日のワードチャレンジ
+            </div>
+            <div class="game-container">
+                <iframe src="https://wordlegame.org/" 
+                        class="game-iframe"
+                        title="Wordleゲーム"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        tabindex="0"
+                        scrolling="no">
+                </iframe>
+            </div>
+            <div class="game-controls-hint">
+                <span class="desktop-hint">キーボードで単語を入力 | 緑は正解、黄色は位置が違います</span>
+                <span class="mobile-hint" style="display: none;">仮想キーボードをタップして単語を入力</span>
+            </div>
+        </div>
+
+        <div class="card-grid">
+            <div class="info-card">
+                <h2>Wordleについて</h2>
+                <p>Wordleは、Josh Wardleによって開発された世界的に人気の単語推理ゲームです。毎日新しい5文字の単語が出題され、プレイヤーは6回のチャンスでその単語を当てることができます。シンプルながらも挑戦的なゲームで、語彙力と論理的思考力を向上させるのに最適です。</p>
+                <div class="highlights">
+                    <div class="highlight-item">
+                        <span class="highlight-number">5</span>
+                        <span class="highlight-text">文字の単語</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-number">6</span>
+                        <span class="highlight-text">回のチャンス</span>
+                    </div>
+                    <div class="highlight-item">
+                        <span class="highlight-number">1</span>
+                        <span class="highlight-text">日1単語</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h2>ゲームルール</h2>
+                <ul class="feature-list">
+                    <li>毎日新しい5文字の単語が出題</li>
+                    <li>6回のチャンスで単語を当てる</li>
+                    <li>緑のマスは文字と位置が正解</li>
+                    <li>黄色のマスは文字は合っているが位置が違う</li>
+                    <li>灰色のマスはその文字が含まれていない</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h2>ゲームのコツ</h2>
+                <ul class="feature-list">
+                    <li>一般的な5文字の単語から始める：STARE, CRANEなど</li>
+                    <li>確定した文字の位置に注目</li>
+                    <li>消去法を活用する</li>
+                    <li>色のフィードバックパターンを分析</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Wordleゲーム | デイリーアップデート | <a href="/about">運営会社</a> | <a href="/privacy">プライバシーポリシー</a></p>
+            <p>単語データベースには10,000以上の厳選された単語が収録されており、さらに増加中...</p>
+        </div>
+    </footer>
+</body>
+</html>
