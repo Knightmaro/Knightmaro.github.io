@@ -83,7 +83,7 @@
 
             const languageUrls = {
                 'zh': '/zh/index.html',
-                'en': '/en/index.html',
+                'en': '/index.html',
                 'ja': '/ja/index.html'
             };
 
@@ -127,6 +127,11 @@
         }
     }
     </script>
+        <!-- 添加语言关联标签 -->
+        <link rel="alternate" hreflang="zh" href="https://knightmaro.github.io/zh/index.html" />
+        <link rel="alternate" hreflang="en" href="https://knightmaro.github.io/index.html" />
+        <link rel="alternate" hreflang="ja" href="https://knightmaro.github.io/ja/index.html" />
+        <link rel="alternate" hreflang="x-default" href="https://knightmaro.github.io/" />
 </head>
 <body>
     <header class="header">
@@ -140,7 +145,7 @@
                     <button class="language-btn">🌐 日本語 <span class="arrow">▼</span></button>
                     <div class="language-dropdown">
                         <a href="/zh/index.html" class="language-option" data-lang="zh">中文</a>
-                        <a href="/en/index.html" class="language-option" data-lang="en">English</a>
+                        <a href="/index.html" class="language-option" data-lang="en">English</a>
                         <a href="/ja/index.html" class="language-option" data-lang="ja">日本語</a>
                     </div>
                 </div>
